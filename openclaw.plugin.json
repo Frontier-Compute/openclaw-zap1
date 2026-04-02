@@ -2,20 +2,21 @@
   "id": "zap1",
   "name": "openclaw-zap1",
   "version": "0.2.0",
-  "description": "Zcash attestation layer for OpenClaw agents. 7 hooks, 14 tools, policy enforcement, session tracking, proof checkpoints anchored to Zcash mainnet.",
+  "description": "Zcash attestation layer for OpenClaw agents. 8 hooks, 14 tools, policy enforcement, session tracking, proof checkpoints anchored to Zcash mainnet.",
   "author": "zk_nd3r",
   "homepage": "https://github.com/Frontier-Compute/openclaw-zap1",
   "repository": "https://github.com/Frontier-Compute/openclaw-zap1",
   "tags": ["zcash", "attestation", "privacy", "zk", "blockchain", "policy", "audit"],
   "contracts": {
     "hooks": [
-      "before_tool_call",
-      "tool_result_persist",
-      "message_sending",
-      "llm_output",
-      "inbound_claim",
-      "session_start",
-      "session_end"
+      "message:sent",
+      "message:received",
+      "message:preprocessed",
+      "message:transcribed",
+      "agent:bootstrap",
+      "session:patch",
+      "gateway:startup",
+      "command"
     ],
     "tools": [
       "zap1_protocol_info",

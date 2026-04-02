@@ -2,7 +2,9 @@
   "name": "@frontiercompute/openclaw-zap1",
   "version": "0.2.0",
   "type": "module",
-  "description": "Zcash attestation layer for OpenClaw agents. 7 hooks, 14 tools, policy enforcement, session attestation, proof checkpoints.",
+  "description": "Zcash attestation layer for OpenClaw agents. 8 hooks, 14 tools, policy enforcement, session attestation, proof checkpoints.",
+  "main": "./index.ts",
+  "files": ["index.ts", "src/", "openclaw.plugin.json", "LICENSE", "README.md"],
   "license": "MIT",
   "author": "zk_nd3r",
   "repository": {

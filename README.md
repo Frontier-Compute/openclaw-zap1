@@ -1,10 +1,10 @@
 # openclaw-zap1
 
-Zcash attestation for OpenClaw agents. Every tool call, LLM response, and outbound message your agent makes gets anchored to Zcash mainnet via ZAP1.
+Zcash attestation for OpenClaw agents. Messages, commands, sessions, and agent lifecycle events get anchored to Zcash mainnet via ZAP1.
 
 **First Zcash plugin on ClawHub.** Live proofs: [pay.frontiercompute.io](https://pay.frontiercompute.io) | Demo: [00zeven.cash](https://00zeven.cash)
 
-No code changes to your agent. Seven hooks run silently, enforce policy, track sessions, and emit proof checkpoints.
+No code changes to your agent. Eight hooks run silently, track sessions, attest messages, and emit proof checkpoints.
 
 ## Install
 
@@ -35,33 +35,33 @@ openclaw plugins install @frontiercompute/openclaw-zap1
 
 Without `apiKey` and `agentId`, only the read-only tools are available. The hooks don't fire.
 
-## Hooks (7)
+## Hooks (8)
 
 All hooks fire automatically when configured. No agent code changes needed.
 
 | Hook | What it does |
 |------|-------------|
-| `before_tool_call` | Policy enforcement. Blocks tools on the deny list, attests the block event. Runs at priority 100 (first). |
-| `tool_result_persist` | Attests every tool result before it hits session history. Hashes input and output. |
-| `message_sending` | Attests outbound messages before dispatch. Hashes channel + content. |
-| `llm_output` | Captures LLM response hashes for the audit trail. |
-| `inbound_claim` | Observes inbound messages. Attests sender, channel, and content hash. Does not claim. |
-| `session_start` | Attests session open with timestamp. |
-| `session_end` | Attests session close with action count. |
-
-Every N actions (configurable via `proofInterval`), the `before_agent_reply` hook injects a proof checkpoint with the agent's current attestation stats and a verification link.
+| `message:sent` | Attests outbound messages. Hashes channel + content. |
+| `message:received` | Attests inbound messages with sender identity, channel, and content hash. |
+| `message:preprocessed` | Attests enriched message body before it reaches the LLM. |
+| `message:transcribed` | Attests audio transcriptions with message ID and transcript hash. |
+| `agent:bootstrap` | Attests session open with timestamp on agent startup. |
+| `session:patch` | Attests session config changes and state transitions. |
+| `gateway:startup` | Attests gateway initialization. |
+| `command` | Attests command events. Every N actions (configurable via `proofInterval`), injects a proof checkpoint with attestation stats. |
 
 ## What gets attested
 
 | Agent does | What gets attested | ZAP1 event |
 |---|---|---|
-| Calls any tool | Tool name + input/output hashes | AGENT_ACTION |
-| Gets LLM response | Model name + response hash | AGENT_ACTION |
 | Sends a message | Channel + message hash | AGENT_ACTION |
 | Receives a message | Sender + channel + content hash | AGENT_ACTION |
-| Starts a session | Timestamp | AGENT_ACTION |
-| Ends a session | Timestamp + action count | AGENT_ACTION |
-| Hits a blocked tool | Tool name + block reason | AGENT_ACTION (policy_block) |
+| Preprocesses a message | Enriched body hash | AGENT_ACTION |
+| Transcribes audio | Message ID + transcript hash | AGENT_ACTION |
+| Starts up (bootstrap) | Timestamp | AGENT_ACTION |
+| Patches a session | Session key + patch hash | AGENT_ACTION |
+| Gateway starts | Timestamp | AGENT_ACTION |
+| Runs a command | Session key + action name | AGENT_ACTION |
 
 Every attestation creates a leaf in the ZAP1 Merkle tree. The root is periodically anchored to Zcash mainnet. Any leaf is independently verifiable from the proof path.
 
@@ -88,7 +88,7 @@ The agent's financial activity (if using an Orchard wallet) stays shielded. The 
 
 ## Policy enforcement
 
-Define `policyRules` in config to control what your agent can do:
+The `policyRules` config defines tool-level access rules:
 
 ```json
 {
@@ -99,7 +99,7 @@ Define `policyRules` in config to control what your agent can do:
 }
 ```
 
-Blocked tools are rejected before execution. The rejection is attested so the block itself becomes part of the verifiable record. Tools requiring approval halt and return a reason string.
+The policy module (`src/policy.ts`) exposes `evaluatePolicy()` for use in your agent's tool pipeline. Blocked tools return a rejection reason. Tools on the `requireApproval` list halt until operator confirms. Wire this into your agent's tool dispatch to enforce rules before execution.
 
 ## Verify your agent's track record
 
