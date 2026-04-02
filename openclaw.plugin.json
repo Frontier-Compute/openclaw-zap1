@@ -51,7 +51,7 @@
     },
     "policyRules": {
       "label": "Policy Rules",
-      "help": "JSON with blockedTools and requireApproval arrays."
+      "help": "JSON with blockedTools and restrictedTools arrays."
     },
     "proofInterval": {
       "label": "Proof Interval",

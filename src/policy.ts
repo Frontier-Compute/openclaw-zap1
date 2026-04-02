@@ -1,7 +1,6 @@
 export interface PolicyRules {
   blockedTools?: string[];
-  requireApproval?: string[];
-  maxSpendZat?: number;
+  restrictedTools?: string[];
 }
 
 export interface PolicyResult {
@@ -18,8 +17,8 @@ export function evaluatePolicy(
     return { allowed: false, reason: `tool "${toolName}" blocked by agent policy` };
   }
 
-  if (rules.requireApproval?.includes(toolName)) {
-    return { allowed: false, reason: `tool "${toolName}" requires operator approval` };
+  if (rules.restrictedTools?.includes(toolName)) {
+    return { allowed: false, reason: `tool "${toolName}" restricted by agent policy` };
   }
 
   return { allowed: true };

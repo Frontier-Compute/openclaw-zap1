@@ -21,7 +21,7 @@ openclaw plugins install @frontiercompute/openclaw-zap1
   "apiUrl": "https://pay.frontiercompute.io",
   "policyRules": {
     "blockedTools": ["dangerous_tool"],
-    "requireApproval": ["send_funds"]
+    "restrictedTools": ["send_funds"]
   },
   "proofInterval": 10
 }
@@ -30,7 +30,7 @@ openclaw plugins install @frontiercompute/openclaw-zap1
 - `agentId`: your agent's identity. Gets committed to the Merkle tree on first action.
 - `apiKey`: required for attestation. Get one by deploying your own ZAP1 instance or requesting access.
 - `apiUrl`: optional, defaults to the public API.
-- `policyRules`: optional. `blockedTools` prevents execution and attests the block. `requireApproval` halts until operator confirms.
+- `policyRules`: optional. `blockedTools` prevents execution and attests the block. `restrictedTools` halts until operator confirms.
 - `proofInterval`: actions between proof checkpoints. Default 10. Set 0 to disable.
 
 Without `apiKey` and `agentId`, only the read-only tools are available. The hooks don't fire.
@@ -94,12 +94,12 @@ The `policyRules` config defines tool-level access rules:
 {
   "policyRules": {
     "blockedTools": ["shell_exec", "file_delete"],
-    "requireApproval": ["send_funds", "deploy_contract"]
+    "restrictedTools": ["send_funds", "deploy_contract"]
   }
 }
 ```
 
-The policy module (`src/policy.ts`) exposes `evaluatePolicy()` for use in your agent's tool pipeline. Blocked tools return a rejection reason. Tools on the `requireApproval` list halt until operator confirms. Wire this into your agent's tool dispatch to enforce rules before execution.
+The policy module (`src/policy.ts`) exposes `evaluatePolicy()` for use in your agent's tool pipeline. Blocked tools return a rejection reason. Tools on the `restrictedTools` list halt until operator confirms. Wire this into your agent's tool dispatch to enforce rules before execution.
 
 ## Verify your agent's track record
 
