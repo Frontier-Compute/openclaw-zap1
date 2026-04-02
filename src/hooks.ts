@@ -43,16 +43,12 @@ async function attestEvent(
   }
 }
 
-function sha256Hex(input: string): string {
+async function sha256Hex(input: string): Promise<string> {
   const encoder = new TextEncoder();
   const data = encoder.encode(input);
-  // Use sync hash for hook context - crypto.subtle not always available
-  // Fall back to simple deterministic hash for non-crypto contexts
-  let hash = 0;
-  for (let i = 0; i < data.length; i++) {
-    hash = ((hash << 5) - hash + data[i]) | 0;
-  }
-  return Math.abs(hash).toString(16).padStart(16, "0");
+  const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
 }
 
 export function registerZap1Hooks(api: OpenClawPluginApi) {
@@ -67,8 +63,8 @@ export function registerZap1Hooks(api: OpenClawPluginApi) {
         ? context.result
         : JSON.stringify(context?.result ?? "");
 
-    const inputHash = sha256Hex(JSON.stringify(context?.input ?? ""));
-    const outputHash = sha256Hex(resultText.slice(0, 4096));
+    const inputHash = await sha256Hex(JSON.stringify(context?.input ?? ""));
+    const outputHash = await sha256Hex(resultText.slice(0, 4096));
 
     await attestEvent(cfg, "AGENT_ACTION", {
       agent_id: cfg.agentId,
@@ -86,7 +82,7 @@ export function registerZap1Hooks(api: OpenClawPluginApi) {
       typeof context?.text === "string" ? context.text : "";
 
     if (messageText.length > 0) {
-      const outputHash = sha256Hex(messageText.slice(0, 4096));
+      const outputHash = await sha256Hex(messageText.slice(0, 4096));
       await attestEvent(cfg, "AGENT_ACTION", {
         agent_id: cfg.agentId,
         action_type: "message_send",
@@ -108,7 +104,7 @@ export function registerZap1Hooks(api: OpenClawPluginApi) {
           : "";
 
     if (outputText.length > 0) {
-      const outputHash = sha256Hex(outputText.slice(0, 8192));
+      const outputHash = await sha256Hex(outputText.slice(0, 8192));
       await attestEvent(cfg, "AGENT_ACTION", {
         agent_id: cfg.agentId,
         action_type: "llm_response",

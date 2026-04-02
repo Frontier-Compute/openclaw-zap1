@@ -1,6 +1,6 @@
 {
   "name": "@frontiercompute/openclaw-zap1",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "type": "module",
   "description": "ZAP1 attestation tools for OpenClaw agents. Query protocol, verify proofs, decode memos, create lifecycle events on Zcash.",
   "license": "MIT",
