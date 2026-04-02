@@ -1,5 +1,5 @@
 import { definePluginEntry, type AnyAgentTool } from "openclaw/plugin-sdk/plugin-entry";
-import { createZap1Tools } from "./tools.js";
+import { createZap1Tools } from "./src/tools.js";
 
 export default definePluginEntry({
   id: "zap1",

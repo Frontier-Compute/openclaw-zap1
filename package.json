@@ -10,7 +10,9 @@
     "url": "https://github.com/Frontier-Compute/openclaw-zap1"
   },
   "openclaw": {
-    "extensions": ["./src/index.ts"],
+    "extensions": [
+      "./index.ts"
+    ],
     "compat": {
       "pluginApi": ">=2026.3.24-beta.2"
     }
@@ -23,5 +25,8 @@
     "openclaw": "*",
     "typescript": "^5.4",
     "vitest": "^2.0"
+  },
+  "dependencies": {
+    "@sinclair/typebox": "^0.34"
   }
 }

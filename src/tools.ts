@@ -1,183 +1,151 @@
-import type { OpenClawPluginToolContext } from "openclaw/plugin-sdk/plugin-entry";
+import { Type } from "@sinclair/typebox";
+import type { OpenClawPluginApi } from "openclaw/plugin-sdk/plugin-runtime";
+import { jsonResult, readStringParam, readNumberParam } from "openclaw/plugin-sdk/provider-web-search";
 
-interface Zap1Config {
-  apiUrl?: string;
-  apiKey?: string;
+function getBaseUrl(api: OpenClawPluginApi): string {
+  return (api.config as any)?.apiUrl || "https://pay.frontiercompute.io";
 }
 
-function getConfig(ctx: OpenClawPluginToolContext): Zap1Config {
-  const config = ctx.pluginConfig ?? {};
-  return {
-    apiUrl: (config as any).apiUrl || "https://pay.frontiercompute.io",
-    apiKey: (config as any).apiKey,
-  };
+function getApiKey(api: OpenClawPluginApi): string | undefined {
+  return (api.config as any)?.apiKey;
 }
 
-async function zap1Fetch(url: string, init?: RequestInit): Promise<any> {
+async function zap1Fetch(url: string, init?: RequestInit): Promise<unknown> {
   const resp = await fetch(url, init);
   if (!resp.ok) throw new Error(`ZAP1 API returned ${resp.status}`);
   return resp.json();
 }
 
-export function createZap1Tools(ctx: OpenClawPluginToolContext) {
-  const cfg = getConfig(ctx);
-  const base = cfg.apiUrl!;
+export function createZap1Tools(api: OpenClawPluginApi) {
+  const base = getBaseUrl(api);
 
   return [
     {
       name: "zap1_protocol_info",
+      label: "ZAP1 Protocol Info",
       description: "Get ZAP1 protocol metadata: version, event types, hash function, FROST status.",
-      parameters: { type: "object" as const, properties: {}, required: [] as string[] },
-      async execute() {
-        const data = await zap1Fetch(`${base}/protocol/info`);
-        return JSON.stringify(data, null, 2);
+      parameters: Type.Object({}, { additionalProperties: false }),
+      execute: async (_toolCallId: string, _rawParams: Record<string, unknown>) => {
+        return jsonResult(await zap1Fetch(`${base}/protocol/info`));
       },
     },
     {
       name: "zap1_stats",
+      label: "ZAP1 Stats",
       description: "Get current network stats: anchor count, leaf count, event type distribution.",
-      parameters: { type: "object" as const, properties: {}, required: [] as string[] },
-      async execute() {
-        const data = await zap1Fetch(`${base}/stats`);
-        return JSON.stringify(data, null, 2);
+      parameters: Type.Object({}, { additionalProperties: false }),
+      execute: async (_toolCallId: string, _rawParams: Record<string, unknown>) => {
+        return jsonResult(await zap1Fetch(`${base}/stats`));
       },
     },
     {
       name: "zap1_verify_proof",
+      label: "ZAP1 Verify Proof",
       description: "Check if an attestation proof is valid by leaf hash. Returns validity status.",
-      parameters: {
-        type: "object" as const,
-        properties: {
-          leaf_hash: { type: "string", description: "64-char hex leaf hash to verify" },
-        },
-        required: ["leaf_hash"],
-      },
-      async execute({ leaf_hash }: { leaf_hash: string }) {
-        const data = await zap1Fetch(`${base}/verify/${leaf_hash}/check`);
-        return JSON.stringify(data, null, 2);
+      parameters: Type.Object({
+        leaf_hash: Type.String({ description: "64-char hex leaf hash to verify" }),
+      }, { additionalProperties: false }),
+      execute: async (_toolCallId: string, rawParams: Record<string, unknown>) => {
+        const leaf = readStringParam(rawParams, "leaf_hash", { required: true });
+        return jsonResult(await zap1Fetch(`${base}/verify/${leaf}/check`));
       },
     },
     {
       name: "zap1_get_proof_bundle",
-      description: "Get the full proof bundle for a leaf hash. Contains everything needed for independent verification.",
-      parameters: {
-        type: "object" as const,
-        properties: {
-          leaf_hash: { type: "string", description: "64-char hex leaf hash" },
-        },
-        required: ["leaf_hash"],
-      },
-      async execute({ leaf_hash }: { leaf_hash: string }) {
-        const data = await zap1Fetch(`${base}/verify/${leaf_hash}/proof.json`);
-        return JSON.stringify(data, null, 2);
+      label: "ZAP1 Proof Bundle",
+      description: "Get the full proof bundle for a leaf hash. Contains leaf, proof path, root, anchor txid, and block height for independent verification.",
+      parameters: Type.Object({
+        leaf_hash: Type.String({ description: "64-char hex leaf hash" }),
+      }, { additionalProperties: false }),
+      execute: async (_toolCallId: string, rawParams: Record<string, unknown>) => {
+        const leaf = readStringParam(rawParams, "leaf_hash", { required: true });
+        return jsonResult(await zap1Fetch(`${base}/verify/${leaf}/proof.json`));
       },
     },
     {
       name: "zap1_anchor_status",
+      label: "ZAP1 Anchor Status",
       description: "Get current Merkle tree state: root, unanchored leaves, anchor recommendation.",
-      parameters: { type: "object" as const, properties: {}, required: [] as string[] },
-      async execute() {
-        const data = await zap1Fetch(`${base}/anchor/status`);
-        return JSON.stringify(data, null, 2);
+      parameters: Type.Object({}, { additionalProperties: false }),
+      execute: async (_toolCallId: string, _rawParams: Record<string, unknown>) => {
+        return jsonResult(await zap1Fetch(`${base}/anchor/status`));
       },
     },
     {
       name: "zap1_anchor_history",
+      label: "ZAP1 Anchor History",
       description: "Get all anchored Merkle roots with txids and block heights.",
-      parameters: { type: "object" as const, properties: {}, required: [] as string[] },
-      async execute() {
-        const data = await zap1Fetch(`${base}/anchor/history`);
-        return JSON.stringify(data, null, 2);
+      parameters: Type.Object({}, { additionalProperties: false }),
+      execute: async (_toolCallId: string, _rawParams: Record<string, unknown>) => {
+        return jsonResult(await zap1Fetch(`${base}/anchor/history`));
       },
     },
     {
       name: "zap1_recent_events",
+      label: "ZAP1 Recent Events",
       description: "Get recent attestation events from the protocol.",
-      parameters: {
-        type: "object" as const,
-        properties: {
-          limit: { type: "number", description: "Number of events to return (default 10)" },
-        },
-        required: [] as string[],
-      },
-      async execute({ limit }: { limit?: number }) {
-        const data = await zap1Fetch(`${base}/events?limit=${limit || 10}`);
-        return JSON.stringify(data, null, 2);
+      parameters: Type.Object({
+        limit: Type.Optional(Type.Number({ description: "Number of events to return (default 10)", minimum: 1, maximum: 100 })),
+      }, { additionalProperties: false }),
+      execute: async (_toolCallId: string, rawParams: Record<string, unknown>) => {
+        const limit = readNumberParam(rawParams, "limit", { integer: true }) || 10;
+        return jsonResult(await zap1Fetch(`${base}/events?limit=${limit}`));
       },
     },
     {
       name: "zap1_decode_memo",
+      label: "ZAP1 Decode Memo",
       description: "Decode a Zcash shielded memo. Identifies ZAP1, ZIP 302, text, binary, and empty formats.",
-      parameters: {
-        type: "object" as const,
-        properties: {
-          memo_hex: { type: "string", description: "Hex-encoded memo bytes" },
-        },
-        required: ["memo_hex"],
-      },
-      async execute({ memo_hex }: { memo_hex: string }) {
-        const resp = await fetch(`${base}/memo/decode`, {
-          method: "POST",
-          body: memo_hex,
-        });
+      parameters: Type.Object({
+        memo_hex: Type.String({ description: "Hex-encoded memo bytes" }),
+      }, { additionalProperties: false }),
+      execute: async (_toolCallId: string, rawParams: Record<string, unknown>) => {
+        const hex = readStringParam(rawParams, "memo_hex", { required: true });
+        const resp = await fetch(`${base}/memo/decode`, { method: "POST", body: hex });
         if (!resp.ok) throw new Error(`Decode returned ${resp.status}`);
-        return JSON.stringify(await resp.json(), null, 2);
+        return jsonResult(await resp.json());
       },
     },
     {
       name: "zap1_create_event",
-      description: "Create a lifecycle attestation event and commit it to the Merkle tree. Requires API key. Supported types: CONTRACT_ANCHOR (needs serial_number, contract_sha256), DEPLOYMENT (needs serial_number, facility_id), HOSTING_PAYMENT (needs serial_number, month, year), SHIELD_RENEWAL (needs year), TRANSFER (needs new_wallet_hash, serial_number), EXIT (needs serial_number), GOVERNANCE_PROPOSAL (needs proposal_id, proposal_hash), GOVERNANCE_VOTE (needs proposal_id, vote_commitment), GOVERNANCE_RESULT (needs proposal_id, result_hash). PROGRAM_ENTRY and OWNERSHIP_ATTEST are created automatically by the scanner.",
-      parameters: {
-        type: "object" as const,
-        properties: {
-          event_type: {
-            type: "string",
-            description: "Event type: CONTRACT_ANCHOR, DEPLOYMENT, HOSTING_PAYMENT, SHIELD_RENEWAL, TRANSFER, EXIT, GOVERNANCE_PROPOSAL, GOVERNANCE_VOTE, GOVERNANCE_RESULT",
-          },
-          wallet_hash: { type: "string", description: "Participant wallet identifier" },
-          serial_number: { type: "string", description: "Machine/asset serial (for most types)" },
-          contract_sha256: { type: "string", description: "SHA-256 of contract artifact (for CONTRACT_ANCHOR)" },
-          facility_id: { type: "string", description: "Facility identifier (for DEPLOYMENT)" },
-          month: { type: "number", description: "Month 1-12 (for HOSTING_PAYMENT)" },
-          year: { type: "number", description: "Year 2020-2100 (for HOSTING_PAYMENT, SHIELD_RENEWAL)" },
-          new_wallet_hash: { type: "string", description: "New owner wallet hash (for TRANSFER)" },
-          proposal_id: { type: "string", description: "Governance proposal ID (for governance types)" },
-          proposal_hash: { type: "string", description: "Proposal content hash (for GOVERNANCE_PROPOSAL)" },
-          vote_commitment: { type: "string", description: "Vote commitment hash (for GOVERNANCE_VOTE)" },
-          result_hash: { type: "string", description: "Result hash (for GOVERNANCE_RESULT)" },
-        },
-        required: ["event_type", "wallet_hash"],
-      },
-      async execute(params: Record<string, string>) {
-        if (!cfg.apiKey) return "Error: API key required for write operations. Set apiKey in plugin config.";
+      label: "ZAP1 Create Event",
+      description: "Create a lifecycle attestation event. Requires API key. Supported: CONTRACT_ANCHOR, DEPLOYMENT, HOSTING_PAYMENT, SHIELD_RENEWAL, TRANSFER, EXIT, GOVERNANCE_PROPOSAL, GOVERNANCE_VOTE, GOVERNANCE_RESULT.",
+      parameters: Type.Object({
+        event_type: Type.String({ description: "Event type name" }),
+        wallet_hash: Type.String({ description: "Participant wallet identifier" }),
+        serial_number: Type.Optional(Type.String({ description: "Machine/asset serial" })),
+        contract_sha256: Type.Optional(Type.String({ description: "Contract artifact SHA-256 (CONTRACT_ANCHOR)" })),
+        facility_id: Type.Optional(Type.String({ description: "Facility identifier (DEPLOYMENT)" })),
+        month: Type.Optional(Type.Number({ description: "Month 1-12 (HOSTING_PAYMENT)" })),
+        year: Type.Optional(Type.Number({ description: "Year (HOSTING_PAYMENT, SHIELD_RENEWAL)" })),
+        new_wallet_hash: Type.Optional(Type.String({ description: "New owner wallet (TRANSFER)" })),
+        proposal_id: Type.Optional(Type.String({ description: "Proposal ID (governance types)" })),
+        proposal_hash: Type.Optional(Type.String({ description: "Proposal hash (GOVERNANCE_PROPOSAL)" })),
+        vote_commitment: Type.Optional(Type.String({ description: "Vote hash (GOVERNANCE_VOTE)" })),
+        result_hash: Type.Optional(Type.String({ description: "Result hash (GOVERNANCE_RESULT)" })),
+      }, { additionalProperties: false }),
+      execute: async (_toolCallId: string, rawParams: Record<string, unknown>) => {
+        const apiKey = getApiKey(api);
+        if (!apiKey) return jsonResult({ error: "API key required. Set apiKey in plugin config." });
         const resp = await fetch(`${base}/event`, {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${cfg.apiKey}`,
-          },
-          body: JSON.stringify(params),
+          headers: { "Content-Type": "application/json", "Authorization": `Bearer ${apiKey}` },
+          body: JSON.stringify(rawParams),
         });
-        if (!resp.ok) {
-          const text = await resp.text();
-          return `Error ${resp.status}: ${text}`;
-        }
-        return JSON.stringify(await resp.json(), null, 2);
+        if (!resp.ok) return jsonResult({ error: `${resp.status}: ${await resp.text()}` });
+        return jsonResult(await resp.json());
       },
     },
     {
       name: "zap1_lifecycle",
+      label: "ZAP1 Lifecycle",
       description: "Get the full lifecycle view for a participant wallet hash.",
-      parameters: {
-        type: "object" as const,
-        properties: {
-          wallet_hash: { type: "string", description: "Participant wallet identifier" },
-        },
-        required: ["wallet_hash"],
-      },
-      async execute({ wallet_hash }: { wallet_hash: string }) {
-        const data = await zap1Fetch(`${base}/lifecycle/${wallet_hash}`);
-        return JSON.stringify(data, null, 2);
+      parameters: Type.Object({
+        wallet_hash: Type.String({ description: "Participant wallet identifier" }),
+      }, { additionalProperties: false }),
+      execute: async (_toolCallId: string, rawParams: Record<string, unknown>) => {
+        const wallet = readStringParam(rawParams, "wallet_hash", { required: true });
+        return jsonResult(await zap1Fetch(`${base}/lifecycle/${wallet}`));
       },
     },
   ];

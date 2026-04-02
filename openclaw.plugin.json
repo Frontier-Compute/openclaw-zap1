@@ -1,17 +1,39 @@
 {
   "id": "zap1",
+  "contracts": {
+    "tools": [
+      "zap1_protocol_info",
+      "zap1_stats",
+      "zap1_verify_proof",
+      "zap1_get_proof_bundle",
+      "zap1_anchor_status",
+      "zap1_anchor_history",
+      "zap1_recent_events",
+      "zap1_decode_memo",
+      "zap1_create_event",
+      "zap1_lifecycle"
+    ]
+  },
+  "uiHints": {
+    "apiKey": {
+      "label": "ZAP1 API Key",
+      "help": "API key for write operations (optional for read-only).",
+      "sensitive": true
+    },
+    "apiUrl": {
+      "label": "ZAP1 API URL",
+      "help": "ZAP1 API endpoint (default: https://pay.frontiercompute.io)."
+    }
+  },
   "configSchema": {
     "type": "object",
     "additionalProperties": false,
     "properties": {
       "apiUrl": {
-        "type": "string",
-        "description": "ZAP1 API endpoint",
-        "default": "https://pay.frontiercompute.io"
+        "type": "string"
       },
       "apiKey": {
-        "type": "string",
-        "description": "API key for write operations (optional for read-only)"
+        "type": ["string", "object"]
       }
     }
   }
