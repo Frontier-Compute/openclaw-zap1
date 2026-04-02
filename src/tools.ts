@@ -109,7 +109,7 @@ export function createZap1Tools(api: OpenClawPluginApi) {
     {
       name: "zap1_create_event",
       label: "ZAP1 Create Event",
-      description: "Create a lifecycle attestation event. Requires API key. Supported: CONTRACT_ANCHOR, DEPLOYMENT, HOSTING_PAYMENT, SHIELD_RENEWAL, TRANSFER, EXIT, GOVERNANCE_PROPOSAL, GOVERNANCE_VOTE, GOVERNANCE_RESULT.",
+      description: "Create an attestation event. Requires API key. Supported lifecycle: CONTRACT_ANCHOR, DEPLOYMENT, HOSTING_PAYMENT, SHIELD_RENEWAL, TRANSFER, EXIT. Governance: GOVERNANCE_PROPOSAL, GOVERNANCE_VOTE, GOVERNANCE_RESULT. Agent: AGENT_REGISTER, AGENT_POLICY, AGENT_ACTION.",
       parameters: Type.Object({
         event_type: Type.String({ description: "Event type name" }),
         wallet_hash: Type.String({ description: "Participant wallet identifier" }),
@@ -123,6 +123,15 @@ export function createZap1Tools(api: OpenClawPluginApi) {
         proposal_hash: Type.Optional(Type.String({ description: "Proposal hash (GOVERNANCE_PROPOSAL)" })),
         vote_commitment: Type.Optional(Type.String({ description: "Vote hash (GOVERNANCE_VOTE)" })),
         result_hash: Type.Optional(Type.String({ description: "Result hash (GOVERNANCE_RESULT)" })),
+        agent_id: Type.Optional(Type.String({ description: "Agent identifier (AGENT_*)" })),
+        pubkey_hash: Type.Optional(Type.String({ description: "Agent public key hash (AGENT_REGISTER)" })),
+        model_hash: Type.Optional(Type.String({ description: "Model hash (AGENT_REGISTER)" })),
+        policy_hash: Type.Optional(Type.String({ description: "Policy hash (AGENT_REGISTER)" })),
+        policy_version: Type.Optional(Type.Number({ description: "Policy version (AGENT_POLICY)" })),
+        rules_hash: Type.Optional(Type.String({ description: "Rules hash (AGENT_POLICY)" })),
+        action_type: Type.Optional(Type.String({ description: "Action type (AGENT_ACTION)" })),
+        input_hash: Type.Optional(Type.String({ description: "Input hash (AGENT_ACTION)" })),
+        output_hash: Type.Optional(Type.String({ description: "Output hash (AGENT_ACTION)" })),
       }, { additionalProperties: false }),
       execute: async (_toolCallId: string, rawParams: Record<string, unknown>) => {
         const apiKey = getApiKey(api);
