@@ -15,9 +15,13 @@
     ]
   },
   "uiHints": {
+    "agentId": {
+      "label": "Agent ID",
+      "help": "Unique identifier for this agent. Used for attestation identity and lifecycle tracking."
+    },
     "apiKey": {
       "label": "ZAP1 API Key",
-      "help": "API key for write operations (optional for read-only).",
+      "help": "API key for write operations. Required for automatic attestation hooks.",
       "sensitive": true
     },
     "apiUrl": {
@@ -29,6 +33,10 @@
     "type": "object",
     "additionalProperties": false,
     "properties": {
+      "agentId": {
+        "type": "string",
+        "description": "Agent identifier for attestation"
+      },
       "apiUrl": {
         "type": "string"
       },
