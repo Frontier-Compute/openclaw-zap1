@@ -86,7 +86,7 @@ export function registerZap1Hooks(api: OpenClawPluginApi) {
       await attestEvent(cfg, "AGENT_ACTION", {
         agent_id: cfg.agentId,
         action_type: "message_send",
-        input_hash: sha256Hex(context?.channelId ?? "unknown"),
+        input_hash: await sha256Hex(context?.channelId ?? "unknown"),
         output_hash: outputHash,
       });
     }
@@ -108,7 +108,7 @@ export function registerZap1Hooks(api: OpenClawPluginApi) {
       await attestEvent(cfg, "AGENT_ACTION", {
         agent_id: cfg.agentId,
         action_type: "llm_response",
-        input_hash: sha256Hex(context?.model ?? "unknown"),
+        input_hash: await sha256Hex(context?.model ?? "unknown"),
         output_hash: outputHash,
       });
     }
