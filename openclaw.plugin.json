@@ -11,7 +11,11 @@
       "zap1_recent_events",
       "zap1_decode_memo",
       "zap1_create_event",
-      "zap1_lifecycle"
+      "zap1_lifecycle",
+      "zap1_agent_status",
+      "zap1_cohort_stats",
+      "zap1_list_webhooks",
+      "zap1_create_api_key"
     ]
   },
   "uiHints": {
@@ -27,6 +31,14 @@
     "apiUrl": {
       "label": "ZAP1 API URL",
       "help": "ZAP1 API endpoint (default: https://pay.frontiercompute.io)."
+    },
+    "policyRules": {
+      "label": "Policy Rules",
+      "help": "JSON with blockedTools and requireApproval arrays."
+    },
+    "proofInterval": {
+      "label": "Proof Interval",
+      "help": "Actions between proof checkpoints. Default 10."
     }
   },
   "configSchema": {
@@ -41,7 +53,18 @@
         "type": "string"
       },
       "apiKey": {
-        "type": ["string", "object"]
+        "type": [
+          "string",
+          "object"
+        ]
+      },
+      "policyRules": {
+        "type": "object",
+        "description": "Agent policy rules"
+      },
+      "proofInterval": {
+        "type": "number",
+        "description": "Proof checkpoint interval"
       }
     }
   }

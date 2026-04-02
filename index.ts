@@ -6,7 +6,7 @@ export default definePluginEntry({
   id: "zap1",
   name: "00zeven",
   description:
-    "Zcash attestation layer for OpenClaw agents. Automatic behavioral proof via hooks + 10 protocol tools. Every tool call, LLM response, and message gets anchored to Zcash.",
+    "Zcash attestation layer for OpenClaw agents. Policy enforcement, behavioral proof, and session tracking via 7 hooks + 14 protocol tools. Every action anchored to Zcash.",
   register(api) {
     for (const tool of createZap1Tools(api)) {
       api.registerTool(tool as AnyAgentTool);

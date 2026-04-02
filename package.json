@@ -1,6 +1,6 @@
 {
   "name": "@frontiercompute/openclaw-zap1",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "type": "module",
   "description": "Zcash attestation layer for OpenClaw agents. Automatic hook-based behavioral proof + 10 protocol tools.",
   "license": "MIT",
@@ -14,7 +14,7 @@
       "./index.ts"
     ],
     "compat": {
-      "pluginApi": ">=2026.3.24-beta.2"
+      "pluginApi": ">=2026.4.2"
     }
   },
   "scripts": {

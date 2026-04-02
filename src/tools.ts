@@ -157,5 +157,60 @@ export function createZap1Tools(api: OpenClawPluginApi) {
         return jsonResult(await zap1Fetch(`${base}/lifecycle/${wallet}`));
       },
     },
+    // --- New tools ---
+    {
+      name: "zap1_agent_status",
+      label: "ZAP1 Agent Status",
+      description: "Get attestation summary for an agent: registration, policies, actions, events.",
+      parameters: Type.Object({
+        agent_id: Type.Optional(Type.String({ description: "Agent ID (defaults to this agent)" })),
+      }, { additionalProperties: false }),
+      execute: async (_toolCallId: string, rawParams: Record<string, unknown>) => {
+        const agentId = readStringParam(rawParams, "agent_id", {}) || (api.config as any)?.agentId || "00zeven-alpha";
+        return jsonResult(await zap1Fetch(`${base}/agent/${agentId}`));
+      },
+    },
+    {
+      name: "zap1_cohort_stats",
+      label: "ZAP1 Cohort Stats",
+      description: "Get mining cohort statistics: machine count, participants, volume tier, attestation stats.",
+      parameters: Type.Object({}, { additionalProperties: false }),
+      execute: async (_toolCallId: string, _rawParams: Record<string, unknown>) => {
+        return jsonResult(await zap1Fetch(`${base}/cohort`));
+      },
+    },
+    {
+      name: "zap1_list_webhooks",
+      label: "ZAP1 List Webhooks",
+      description: "List registered webhooks. Requires API key.",
+      parameters: Type.Object({}, { additionalProperties: false }),
+      execute: async (_toolCallId: string, _rawParams: Record<string, unknown>) => {
+        const apiKey = getApiKey(api);
+        if (!apiKey) return jsonResult({ error: "API key required." });
+        return jsonResult(await zap1Fetch(`${base}/webhooks`, {
+          headers: { "Authorization": `Bearer ${apiKey}` },
+        }));
+      },
+    },
+    {
+      name: "zap1_create_api_key",
+      label: "ZAP1 Create API Key",
+      description: "Provision a tenant API key. Admin only. Tier: builder (500 leaves/mo) or operator (unlimited).",
+      parameters: Type.Object({
+        name: Type.String({ description: "Key name / tenant identifier" }),
+        tier: Type.String({ description: "builder or operator" }),
+      }, { additionalProperties: false }),
+      execute: async (_toolCallId: string, rawParams: Record<string, unknown>) => {
+        const apiKey = getApiKey(api);
+        if (!apiKey) return jsonResult({ error: "API key required." });
+        const resp = await fetch(`${base}/admin/keys`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "Authorization": `Bearer ${apiKey}` },
+          body: JSON.stringify(rawParams),
+        });
+        if (!resp.ok) return jsonResult({ error: `${resp.status}: ${await resp.text()}` });
+        return jsonResult(await resp.json());
+      },
+    },
   ];
 }
