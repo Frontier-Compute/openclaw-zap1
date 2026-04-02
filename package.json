@@ -1,0 +1,27 @@
+{
+  "name": "@frontiercompute/openclaw-zap1",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "ZAP1 attestation tools for OpenClaw agents. Attest actions, verify proofs, and export evidence on Zcash.",
+  "license": "MIT",
+  "author": "zk_nd3r",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Frontier-Compute/openclaw-zap1"
+  },
+  "openclaw": {
+    "extensions": ["./src/index.ts"],
+    "compat": {
+      "pluginApi": ">=2026.3.24-beta.2"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "openclaw": "*",
+    "typescript": "^5.4",
+    "vitest": "^2.0"
+  }
+}

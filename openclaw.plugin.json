@@ -1,0 +1,18 @@
+{
+  "id": "zap1",
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "apiUrl": {
+        "type": "string",
+        "description": "ZAP1 API endpoint",
+        "default": "https://pay.frontiercompute.io"
+      },
+      "apiKey": {
+        "type": "string",
+        "description": "API key for write operations (optional for read-only)"
+      }
+    }
+  }
+}
