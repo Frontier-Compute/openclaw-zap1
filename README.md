@@ -1,8 +1,10 @@
-# 00zeven
+# openclaw-zap1
 
-Zcash attestation layer for OpenClaw agents.
+Zcash attestation for OpenClaw agents. Every tool call, LLM response, and outbound message your agent makes gets anchored to Zcash mainnet via ZAP1.
 
-Install the plugin and every tool call, LLM response, and outbound message your agent makes gets anchored to Zcash mainnet via ZAP1. No code changes to your agent. Seven hooks run silently, enforce policy, track sessions, and emit proof checkpoints.
+**First Zcash plugin on ClawHub.** Live proofs: [pay.frontiercompute.io](https://pay.frontiercompute.io) | Demo: [00zeven.cash](https://00zeven.cash)
+
+No code changes to your agent. Seven hooks run silently, enforce policy, track sessions, and emit proof checkpoints.
 
 ## Install
 
