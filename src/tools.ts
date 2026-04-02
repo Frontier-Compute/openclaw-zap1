@@ -157,7 +157,6 @@ export function createZap1Tools(api: OpenClawPluginApi) {
         return jsonResult(await zap1Fetch(`${base}/lifecycle/${wallet}`));
       },
     },
-    // --- New tools ---
     {
       name: "zap1_agent_status",
       label: "ZAP1 Agent Status",

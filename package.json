@@ -2,7 +2,7 @@
   "name": "@frontiercompute/openclaw-zap1",
   "version": "0.2.0",
   "type": "module",
-  "description": "Zcash attestation layer for OpenClaw agents. Automatic hook-based behavioral proof + 10 protocol tools.",
+  "description": "Zcash attestation layer for OpenClaw agents. 7 hooks, 14 tools, policy enforcement, session attestation, proof checkpoints.",
   "license": "MIT",
   "author": "zk_nd3r",
   "repository": {
