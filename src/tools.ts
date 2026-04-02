@@ -44,7 +44,7 @@ export function createZap1Tools(ctx: OpenClawPluginToolContext) {
     },
     {
       name: "zap1_verify_proof",
-      description: "Verify an attestation proof by leaf hash. Returns the proof path, root, anchor txid, and block height.",
+      description: "Check if an attestation proof is valid by leaf hash. Returns validity status.",
       parameters: {
         type: "object" as const,
         properties: {
@@ -126,16 +126,21 @@ export function createZap1Tools(ctx: OpenClawPluginToolContext) {
     },
     {
       name: "zap1_create_event",
-      description: "Create an attestation event and commit it to the Merkle tree. Requires API key.",
+      description: "Create a lifecycle attestation event and commit it to the Merkle tree. Requires API key. Supported types: CONTRACT_ANCHOR (needs serial_number, contract_sha256), DEPLOYMENT (needs serial_number, facility_id), HOSTING_PAYMENT (needs serial_number, month, year), SHIELD_RENEWAL (needs year), TRANSFER (needs new_wallet_hash, serial_number), EXIT (needs serial_number), GOVERNANCE_PROPOSAL (needs proposal_id, proposal_hash), GOVERNANCE_VOTE (needs proposal_id, vote_commitment), GOVERNANCE_RESULT (needs proposal_id, result_hash). PROGRAM_ENTRY and OWNERSHIP_ATTEST are created automatically by the scanner.",
       parameters: {
         type: "object" as const,
         properties: {
           event_type: {
             type: "string",
-            description: "Event type: PROGRAM_ENTRY, OWNERSHIP_ATTEST, CONTRACT_ANCHOR, DEPLOYMENT, HOSTING_PAYMENT, SHIELD_RENEWAL, TRANSFER, EXIT, GOVERNANCE_PROPOSAL, GOVERNANCE_VOTE, GOVERNANCE_RESULT",
+            description: "Event type: CONTRACT_ANCHOR, DEPLOYMENT, HOSTING_PAYMENT, SHIELD_RENEWAL, TRANSFER, EXIT, GOVERNANCE_PROPOSAL, GOVERNANCE_VOTE, GOVERNANCE_RESULT",
           },
           wallet_hash: { type: "string", description: "Participant wallet identifier" },
-          serial_number: { type: "string", description: "Machine/asset serial (optional)" },
+          serial_number: { type: "string", description: "Machine/asset serial (for most types)" },
+          contract_sha256: { type: "string", description: "SHA-256 of contract artifact (for CONTRACT_ANCHOR)" },
+          facility_id: { type: "string", description: "Facility identifier (for DEPLOYMENT)" },
+          month: { type: "number", description: "Month 1-12 (for HOSTING_PAYMENT)" },
+          year: { type: "number", description: "Year 2020-2100 (for HOSTING_PAYMENT, SHIELD_RENEWAL)" },
+          new_wallet_hash: { type: "string", description: "New owner wallet hash (for TRANSFER)" },
           proposal_id: { type: "string", description: "Governance proposal ID (for governance types)" },
           proposal_hash: { type: "string", description: "Proposal content hash (for GOVERNANCE_PROPOSAL)" },
           vote_commitment: { type: "string", description: "Vote commitment hash (for GOVERNANCE_VOTE)" },

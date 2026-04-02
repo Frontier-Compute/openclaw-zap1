@@ -1,6 +1,6 @@
 # openclaw-zap1
 
-ZAP1 attestation tools for OpenClaw agents. Any OpenClaw agent can attest actions to Zcash, verify proofs, and export evidence.
+ZAP1 attestation tools for OpenClaw agents. Query the ZAP1 protocol on Zcash, verify proofs, decode memos, and create lifecycle events.
 
 ## Install
 

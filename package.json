@@ -2,7 +2,7 @@
   "name": "@frontiercompute/openclaw-zap1",
   "version": "0.1.0",
   "type": "module",
-  "description": "ZAP1 attestation tools for OpenClaw agents. Attest actions, verify proofs, and export evidence on Zcash.",
+  "description": "ZAP1 attestation tools for OpenClaw agents. Query protocol, verify proofs, decode memos, create lifecycle events on Zcash.",
   "license": "MIT",
   "author": "zk_nd3r",
   "repository": {
