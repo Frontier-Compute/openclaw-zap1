@@ -133,7 +133,7 @@ Your own Merkle tree, your own anchor address, your own API keys. MIT licensed.
 ## Protocol
 
 - 18 deployed event types across 7 families (lifecycle, staking, governance, ZSA, mining, validators, agents)
-- 5 mainnet anchors, BLAKE2b-256 with domain-separated personalization
+- Live mainnet anchors. Check: https://pay.frontiercompute.io/stats. BLAKE2b-256 with domain-separated personalization
 - Verification SDKs: Rust (crates.io), JS (npm), Solidity (Sepolia)
 - ZIP draft: [zcash/zips PR #1243](https://github.com/zcash/zips/pull/1243)
 - Full spec: [ONCHAIN_PROTOCOL.md](https://github.com/Frontier-Compute/zap1/blob/main/ONCHAIN_PROTOCOL.md)
