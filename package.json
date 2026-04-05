@@ -1,6 +1,6 @@
 {
   "name": "@frontiercompute/openclaw-zap1",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "type": "module",
   "description": "Zcash attestation layer for OpenClaw agents. 8 hooks, 14 tools, policy enforcement, session attestation, proof checkpoints.",
   "main": "./dist/index.js",

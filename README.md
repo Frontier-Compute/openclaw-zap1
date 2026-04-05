@@ -117,7 +117,11 @@ curl https://pay.frontiercompute.io/verify/{leaf_hash}/check
 curl https://pay.frontiercompute.io/verify/{leaf_hash}/proof.json
 ```
 
-Proofs are also verifiable on Ethereum via the Solidity verifier at `0x3fD65055A8dC772C848E7F227CE458803005C87F` (Sepolia).
+Proofs verifiable on 5 chains: Arbitrum (`0x9D0B26010C9a7a2a8509Fd1a3407B741d9C10e3a`), Base (`0x3fD65055A8dC772C848E7F227CE458803005C87F`), Hyperliquid (`0x3fD65055A8dC772C848E7F227CE458803005C87F`), Solana (`93g4ftQS871PpxoWR4mYtWLhxxzAvx7D5CWTxMVoiaE6`), NEAR (`zap1anchor.testnet`). Browser verification at [frontiercompute.cash/verify.html](https://frontiercompute.cash/verify.html).
+
+## Agent custody (new)
+
+Pair with `@frontiercompute/zcash-ika` for split-key custody. Your agent holds half a secp256k1 key via Ika's 2PC-MPC. Spend policy enforced by Sui Move contract. One dWallet signs ZEC, BTC, and ETH. npm: [zcash-ika](https://www.npmjs.com/package/@frontiercompute/zcash-ika).
 
 ## Deploy your own
 
