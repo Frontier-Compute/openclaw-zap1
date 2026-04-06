@@ -1,5 +1,9 @@
 # openclaw-zap1
 
+[![npm](https://img.shields.io/npm/v/@frontiercompute/openclaw-zap1)](https://www.npmjs.com/package/@frontiercompute/openclaw-zap1)
+![downloads](https://img.shields.io/npm/dw/@frontiercompute/openclaw-zap1)
+![license](https://img.shields.io/npm/l/@frontiercompute/openclaw-zap1)
+
 Zcash attestation for OpenClaw agents. Messages, commands, sessions, and agent lifecycle events get anchored to Zcash mainnet via ZAP1.
 
 **First Zcash plugin on ClawHub.** Live proofs: [pay.frontiercompute.io](https://pay.frontiercompute.io) | Demo: [00zeven.cash](https://00zeven.cash)
@@ -141,6 +145,15 @@ Your own Merkle tree, your own anchor address, your own API keys. MIT licensed.
 - Verification SDKs: Rust (crates.io), JS (npm), Solidity (Sepolia)
 - ZIP draft: [zcash/zips PR #1243](https://github.com/zcash/zips/pull/1243)
 - Full spec: [ONCHAIN_PROTOCOL.md](https://github.com/Frontier-Compute/zap1/blob/main/ONCHAIN_PROTOCOL.md)
+
+## Related Packages
+
+| Package | What it does |
+|---------|-------------|
+| [@frontiercompute/zcash-ika](https://www.npmjs.com/package/@frontiercompute/zcash-ika) | Zcash + Bitcoin signing via Ika 2PC-MPC |
+| [@frontiercompute/zcash-mcp](https://www.npmjs.com/package/@frontiercompute/zcash-mcp) | MCP server for Zcash (22 tools) |
+| [@frontiercompute/zap1](https://www.npmjs.com/package/@frontiercompute/zap1) | ZAP1 attestation client |
+| [@frontiercompute/silo-zap1](https://www.npmjs.com/package/@frontiercompute/silo-zap1) | Silo agent attestation via ZAP1 |
 
 ## License
 
