@@ -6,7 +6,7 @@
 
 Zcash attestation for OpenClaw agents. Messages, commands, sessions, and agent lifecycle events get anchored to Zcash mainnet via ZAP1.
 
-**First Zcash plugin on ClawHub.** Live proofs: [pay.frontiercompute.io](https://pay.frontiercompute.io) | Demo: [00zeven.cash](https://00zeven.cash)
+Zcash attestation plugin for OpenClaw. Live proofs: [pay.frontiercompute.io](https://pay.frontiercompute.io) | Demo: [00zeven.cash](https://00zeven.cash)
 
 No code changes to your agent. Eight hooks run silently, track sessions, attest messages, and emit proof checkpoints.
 
@@ -125,7 +125,7 @@ Proofs verifiable on 5 chains: Arbitrum (`0x9D0B26010C9a7a2a8509Fd1a3407B741d9C1
 
 ## Agent custody (new)
 
-Pair with `@frontiercompute/zcash-ika` for split-key custody. Your agent holds half a secp256k1 key via Ika's 2PC-MPC. Spend policy enforced by Sui Move contract. One dWallet signs ZEC, BTC, and ETH. npm: [zcash-ika](https://www.npmjs.com/package/@frontiercompute/zcash-ika).
+Pair with `@frontiercompute/zcash-ika` for honest-majority split-key custody (2PC-MPC via Ika, not ZK-trustless). Your agent holds half a secp256k1 key. Spend policy enforced by Sui Move contract. One dWallet signs ZEC, BTC, and ETH. npm: [zcash-ika](https://www.npmjs.com/package/@frontiercompute/zcash-ika).
 
 ## Deploy your own
 
@@ -140,7 +140,7 @@ Your own Merkle tree, your own anchor address, your own API keys. MIT licensed.
 
 ## Protocol
 
-- 18 deployed event types across 7 families (lifecycle, staking, governance, ZSA, mining, validators, agents)
+- 9 active mainnet event types (lifecycle + merkle root). Protocol defines additional families for staking, governance, ZSA, and agents — see ONCHAIN_PROTOCOL.md.
 - Live mainnet anchors. Check: https://pay.frontiercompute.io/stats. BLAKE2b-256 with domain-separated personalization
 - Verification SDKs: Rust (crates.io), JS (npm), Solidity (Sepolia)
 - ZIP draft: [zcash/zips PR #1243](https://github.com/zcash/zips/pull/1243)
@@ -151,7 +151,7 @@ Your own Merkle tree, your own anchor address, your own API keys. MIT licensed.
 | Package | What it does |
 |---------|-------------|
 | [@frontiercompute/zcash-ika](https://www.npmjs.com/package/@frontiercompute/zcash-ika) | Zcash + Bitcoin signing via Ika 2PC-MPC |
-| [@frontiercompute/zcash-mcp](https://www.npmjs.com/package/@frontiercompute/zcash-mcp) | MCP server for Zcash (22 tools) |
+| [@frontiercompute/zcash-mcp](https://www.npmjs.com/package/@frontiercompute/zcash-mcp) | MCP server for Zcash (12 tools) |
 | [@frontiercompute/zap1](https://www.npmjs.com/package/@frontiercompute/zap1) | ZAP1 attestation client |
 | [@frontiercompute/silo-zap1](https://www.npmjs.com/package/@frontiercompute/silo-zap1) | Silo agent attestation via ZAP1 |
 
