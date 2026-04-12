@@ -121,7 +121,7 @@ curl https://pay.frontiercompute.io/verify/{leaf_hash}/check
 curl https://pay.frontiercompute.io/verify/{leaf_hash}/proof.json
 ```
 
-Proofs verifiable on 6 mainnet chains: Ethereum, Arbitrum, Base, Hyperliquid, NEAR, Sui. Sepolia (testnet). Browser verification at [frontiercompute.cash/verify.html](https://frontiercompute.cash/verify.html).
+Proofs verifiable on 7 chains: Ethereum, Arbitrum, Base, Hyperliquid, NEAR, Sui. Sepolia (testnet). Browser verification at [frontiercompute.cash/verify.html](https://frontiercompute.cash/verify.html).
 
 ## Agent custody (new)
 
@@ -151,7 +151,7 @@ Your own Merkle tree, your own anchor address, your own API keys. MIT licensed.
 | Package | What it does |
 |---------|-------------|
 | [@frontiercompute/zcash-ika](https://www.npmjs.com/package/@frontiercompute/zcash-ika) | Zcash + Bitcoin signing via Ika 2PC-MPC |
-| [@frontiercompute/zcash-mcp](https://www.npmjs.com/package/@frontiercompute/zcash-mcp) | MCP server for Zcash (12 tools) |
+| [@frontiercompute/zcash-mcp](https://www.npmjs.com/package/@frontiercompute/zcash-mcp) | MCP server for Zcash (22 tools) |
 | [@frontiercompute/zap1](https://www.npmjs.com/package/@frontiercompute/zap1) | ZAP1 attestation client |
 | [@frontiercompute/silo-zap1](https://www.npmjs.com/package/@frontiercompute/silo-zap1) | Silo agent attestation via ZAP1 |
 
